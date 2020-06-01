@@ -2,6 +2,7 @@ package response
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -14,11 +15,9 @@ func OK(w http.ResponseWriter, statusCode int, resp map[string]interface{}) {
 	w.Write(b)
 }
 
-func Error(w http.ResponseWriter, resp *ErrorResponse) {
+func Error(w http.ResponseWriter, resp *ErrorResponse, err error) {
 	w.WriteHeader(resp.StatusCode)
-	res, err := json.Marshal(&resp.JsonResp)
-	if err != nil {
-		panic(err)
-	}
+	res, _ := json.Marshal(&resp.JsonResp)
+	log.Println(err)
 	w.Write(res)
 }

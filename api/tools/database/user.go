@@ -1,5 +1,7 @@
 package database
 
+import "log"
+
 type User struct {
 	UserId          int    `json:"user_id"`
 	Username        string `json:"username"`
@@ -19,17 +21,19 @@ func (u *User) Add() error {
 	return nil
 }
 
-func (u *User) GetByUsername() error {
-	stmtOut, err := db.Prepare("SELECT password FROM `users` WHERE username=?")
+func (u *User) GetByUsername() (*User, error) {
+	stmtOut, err := db.Prepare("SELECT * FROM `users` WHERE username=?")
 	if err != nil {
-		return err
+		log.Printf("db prepare err: %v\n", err)
+		return nil, err
 	}
-	if err := stmtOut.QueryRow(u.Username).Scan(&u.Password); err != nil {
-		// If the query selects no rows, the *Row's Scan will return ErrNoRows.
-		return err
+	var output User
+	if err := stmtOut.QueryRow(u.Username).Scan(&output.UserId, &output.Username, &output.Password); err != nil {
+		log.Printf("SQL exec err: %v\n", err)
+		return nil, err
 	}
 	defer stmtOut.Close()
-	return nil
+	return &output, nil
 }
 
 func (u *User) Delete() error {
