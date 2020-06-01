@@ -1,0 +1,16 @@
+app:
+  debugMode: true
+api:
+  port: ":8080"
+mysql:
+  host: "192.168.56.23"
+  port: "3306"
+  user: "root"
+  password: "test123"
+  database: "potato"
+redis:
+  addr: "192.168.56.23:6379"
+  cacheDB: 0
+  sessionDB: 1
+  poolSize: 10
+  minIdleConns: 10
