@@ -14,11 +14,17 @@ import (
 
 func RegisterHandlers() *httprouter.Router {
 	router := httprouter.New()
+	// user handler
 	router.POST("/user/", handler.UserCreate)
 	router.POST("/user/:username", handler.Login)
-	//router.GET("/user/login/:username/:password/:confirm_password", handler.Login)
 	router.GET("/user/status/", handler.IsLogin)
 	router.GET("/user/logout/", handler.Logout)
+	router.DELETE("/user", handler.DeleteUser)
+	// video handler
+	router.POST("/video", handler.VideoCreate)
+	router.GET("/video/:video_id", handler.VideoGet)
+	router.DELETE("/video", handler.VideoCreate)
+
 	return router
 }
 
@@ -32,7 +38,6 @@ func main() {
 		panic(err)
 	}
 	session.Init()
-	//session.IsLogin()
 
 	r := RegisterHandlers()
 	http.ListenAndServe(":8080", r)

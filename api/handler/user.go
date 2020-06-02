@@ -15,21 +15,12 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func parseParameter(b io.ReadCloser, u *database.User) error {
-	body, err := ioutil.ReadAll(b)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(body, &u)
-}
-
 func UserCreate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var user database.User
 	if err := parseParameter(r.Body, &user); err != nil {
 		response.Error(w, &response.JsonDecodeErr, err)
 		return
 	}
-	fmt.Printf("user: %+v\n", user)
 	if !isPasswordConfirmed(&user) {
 		response.Error(w, &response.ConfirmedErr, fmt.Errorf("password confirmed failed"))
 		return
@@ -44,10 +35,6 @@ func UserCreate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	})
 }
 
-func isPasswordConfirmed(u *database.User) bool {
-	return u.Password == u.ConfirmPassword
-}
-
 func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var user database.User
 	if err := parseParameter(r.Body, &user); err != nil {
@@ -55,8 +42,6 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 	user.Username = ps.ByName("username")
-	//user.Password = ps.ByName("password")
-	//user.ConfirmPassword = ps.ByName("confirm_password")
 	output, err := user.GetByUsername()
 	if err != nil {
 		response.Error(w, &response.DbError, err)
@@ -83,10 +68,9 @@ func IsLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		response.Error(w, &response.GetLoginInfoErr, fmt.Errorf("get login info err: %v\n", err))
 		return
 	}
-	//io.WriteString(w, fmt.Sprintf("%+v\n", u))
 	response.OK(w, http.StatusOK, map[string]interface{}{
 		"code":    http.StatusOK,
-		"message": "is login",
+		"message": "logged in",
 		"data":    u,
 	})
 }
@@ -100,4 +84,20 @@ func Logout(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		"code":    http.StatusOK,
 		"message": "logout successful",
 	})
+}
+
+func DeleteUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+}
+
+func isPasswordConfirmed(u *database.User) bool {
+	return u.Password == u.ConfirmPassword
+}
+
+func parseParameter(b io.ReadCloser, u *database.User) error {
+	body, err := ioutil.ReadAll(b)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(body, &u)
 }
