@@ -23,7 +23,6 @@ type dbConf struct {
 
 func Init() error {
 	c := getDatabaseConf()
-	// root:test123@tcp(192.168.56.23:3306)/potato?charset=utf8
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", c.user, c.password, c.host, c.port, c.database)
 	db, dbErr = sql.Open("mysql", dsn)
 	if dbErr != nil {

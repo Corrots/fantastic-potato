@@ -12,6 +12,8 @@ type ErrorResponse struct {
 }
 
 var (
+	SucceedCode = "00"
+
 	ParseRequestErr = ErrorResponse{StatusCode: 400, JsonResp: Resp{Code: "-1", Message: "Request body is not correct"}}
 	JsonDecodeErr   = ErrorResponse{StatusCode: 402, JsonResp: Resp{Code: "-2", Message: "Decode request json body failed"}}
 	DbError         = ErrorResponse{StatusCode: 500, JsonResp: Resp{Code: "-3", Message: "DB ops failed"}}
