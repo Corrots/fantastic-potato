@@ -21,6 +21,7 @@ func UserCreate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		response.Error(w, &response.JsonDecodeErr, err)
 		return
 	}
+	defer r.Body.Close()
 	if !isPasswordConfirmed(&user) {
 		response.Error(w, &response.ConfirmedErr, fmt.Errorf("password confirmed failed"))
 		return

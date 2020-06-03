@@ -18,13 +18,13 @@ func (v *Video) Add() error {
 	return err
 }
 
-func (v *Video) GetByVideoId() (*Video, error) {
+func GetVideoById(videoId int) (*Video, error) {
 	output, err := db.Prepare("SELECT * FROM `videos` WHERE video_id=?")
 	if err != nil {
 		return nil, err
 	}
 	var video Video
-	err = output.QueryRow(v.VideoId).Scan(&video.VideoId, &video.AuthorId, &video.Name, &video.CategoryId, &video.CreateTime)
+	err = output.QueryRow(videoId).Scan(&video.VideoId, &video.AuthorId, &video.Name, &video.CategoryId, &video.CreateTime)
 	if err != nil {
 		return nil, err
 	}

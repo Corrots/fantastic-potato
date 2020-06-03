@@ -25,6 +25,7 @@ func VideoCreate(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		response.Error(w, &response.ParseRequestErr, err)
 		return
 	}
+	defer r.Body.Close()
 	var v database.Video
 	if err := json.Unmarshal(b, &v); err != nil {
 		response.Error(w, &response.JsonDecodeErr, err)
@@ -46,7 +47,7 @@ func VideoGet(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var v database.Video
 	videoId, _ := strconv.Atoi(ps.ByName("video_id"))
 	v.VideoId = videoId
-	video, err := v.GetByVideoId()
+	video, err := database.GetVideoById(videoId)
 	if err != nil {
 		response.Error(w, &response.ServerErr, err)
 		return

@@ -24,6 +24,9 @@ func RegisterHandlers() *httprouter.Router {
 	router.POST("/video", handler.VideoCreate)
 	router.GET("/video/:video_id", handler.VideoGet)
 	router.DELETE("/video", handler.VideoCreate)
+	// comment handler
+	router.POST("/comment", handler.CommentCreate)
+	router.GET("/comments/:video_id", handler.GetComments)
 
 	return router
 }
